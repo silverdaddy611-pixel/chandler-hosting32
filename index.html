@@ -4,11 +4,170 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chand App</title>
-</head>
-<body>
-  <h1>Welcome to Chand App</h1>
-  <p>Your new messaging platform.</p>
 
-  <button>Start Chatting</button>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f5f7fb;
+      color: #222;
+    }
+
+    .app {
+      max-width: 500px;
+      margin: auto;
+      min-height: 100vh;
+      background: white;
+    }
+
+    header {
+      background: #075e54;
+      color: white;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      font-size: 24px;
+    }
+
+    .profile {
+      width: 42px;
+      height: 42px;
+      background: white;
+      color: #075e54;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    .search {
+      padding: 15px;
+      background: #f0f2f5;
+    }
+
+    .search input {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 20px;
+      outline: none;
+    }
+
+    .chat {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+    }
+
+    .avatar {
+      width: 50px;
+      height: 50px;
+      background: #ddd;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      font-weight: bold;
+    }
+
+    .chat-info {
+      flex: 1;
+    }
+
+    .chat-info h3 {
+      margin-bottom: 5px;
+    }
+
+    .chat-info p {
+      color: #777;
+      font-size: 14px;
+    }
+
+    .online {
+      color: green;
+      font-size: 12px;
+    }
+
+    .bottom {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      max-width: 500px;
+      background: white;
+      border-top: 1px solid #ddd;
+      display: flex;
+      justify-content: space-around;
+      padding: 15px 0;
+    }
+
+    .bottom button {
+      background: none;
+      border: none;
+      font-size: 15px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <header>
+    <h1>Chand App</h1>
+    <div class="profile">C</div>
+  </header>
+
+  <div class="search">
+    <input type="text" placeholder="Search chats...">
+  </div>
+
+  <div class="chat">
+    <div class="avatar">A</div>
+    <div class="chat-info">
+      <h3>Alex</h3>
+      <p>Hello! Welcome to Chand App.</p>
+      <span class="online">● Online</span>
+    </div>
+  </div>
+
+  <div class="chat">
+    <div class="avatar">J</div>
+    <div class="chat-info">
+      <h3>John</h3>
+      <p>Let's chat on Chand App.</p>
+      <span class="online">● Online</span>
+    </div>
+  </div>
+
+  <div class="chat">
+    <div class="avatar">M</div>
+    <div class="chat-info">
+      <h3>Mary</h3>
+      <p>Nice to meet you!</p>
+    </div>
+  </div>
+
+  <div class="bottom">
+    <button>💬 Chats</button>
+    <button>👥 Contacts</button>
+    <button>⚙️ Settings</button>
+  </div>
+
+</div>
+
 </body>
 </html>
