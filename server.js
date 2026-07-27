@@ -79,4 +79,122 @@ app.get("/setup", async (req, res) => {
 });
 
 // Submit a report
-app.post("/reports
+app.post("/reports", async (req, res) => {
+  try {
+    const {
+      phone_number,
+      reason,
+      details,
+    } = req.body;
+
+    if (!phone_number || !reason) {
+      return res.status(400).json({
+        success: false,
+        message: "Phone number and reason are required",
+      });
+    }
+
+    const result = await pool.query(
+      `INSERT INTO reports
+       (phone_number, reason, details)
+       VALUES ($1, $2, $3)
+       RETURNING *`,
+      [
+        phone_number,
+        reason,
+        details || null,
+      ]
+    );
+
+    res.status(201).json({
+      success: true,
+      message: "Report submitted successfully",
+      report: result.rows[0],
+    });
+  } catch (error) {
+    console.error("Report error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Could not submit report",
+    });
+  }
+});
+
+// Get all reports
+app.get("/reports", async (req, res) => {
+  try {
+    const result = await pool.query(
+      "SELECT * FROM reports ORDER BY created_at DESC"
+    );
+
+    res.json({
+      success: true,
+      reports: result.rows,
+    });
+  } catch (error) {
+    console.error("Get reports error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Could not retrieve reports",
+    });
+  }
+});
+
+// Update report status
+app.patch("/reports/:id/status", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    const allowedStatuses = [
+      "pending",
+      "reviewed",
+      "resolved",
+      "rejected",
+    ];
+
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid status",
+      });
+    }
+
+    const result = await pool.query(
+      `UPDATE reports
+       SET status = $1
+       WHERE id = $2
+       RETURNING *`,
+      [status, id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Report not found",
+      });
+    }
+
+    res.json({
+      success: true,
+      message: "Report status updated successfully",
+      report: result.rows[0],
+    });
+  } catch (error) {
+    console.error("Update status error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Could not update report status",
+    });
+  }
+});
+
+// Start server
+app.listen(PORT, () => {
+  console.log(
+    `Chand App API running on port ${PORT}`
+  );
+});
