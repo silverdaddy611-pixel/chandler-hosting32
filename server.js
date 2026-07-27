@@ -1,8 +1,20 @@
 const express = require("express");
+const cors = require("cors");
 const { Pool } = require("pg");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Allow your moderation dashboard to connect to this API
+app.use(
+  cors({
+    origin: [
+      "https://chand-moderation-dashboard.onrender.com"
+    ],
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type"],
+  })
+);
 
 app.use(express.json());
 
@@ -13,6 +25,7 @@ const pool = new Pool({
   },
 });
 
+// Test API
 app.get("/", (req, res) => {
   res.json({
     success: true,
@@ -20,6 +33,7 @@ app.get("/", (req, res) => {
   });
 });
 
+// Test database connection
 app.get("/db-test", async (req, res) => {
   try {
     const result = await pool.query("SELECT NOW() AS time");
@@ -39,6 +53,7 @@ app.get("/db-test", async (req, res) => {
   }
 });
 
+// Create reports table
 app.get("/setup", async (req, res) => {
   try {
     await pool.query(`
@@ -66,9 +81,14 @@ app.get("/setup", async (req, res) => {
   }
 });
 
+// Submit a report
 app.post("/reports", async (req, res) => {
   try {
-    const { phone_number, reason, details } = req.body;
+    const {
+      phone_number,
+      reason,
+      details
+    } = req.body;
 
     if (!phone_number || !reason) {
       return res.status(400).json({
@@ -78,10 +98,15 @@ app.post("/reports", async (req, res) => {
     }
 
     const result = await pool.query(
-      `INSERT INTO reports (phone_number, reason, details)
+      `INSERT INTO reports
+       (phone_number, reason, details)
        VALUES ($1, $2, $3)
        RETURNING *`,
-      [phone_number, reason, details || null]
+      [
+        phone_number,
+        reason,
+        details || null
+      ]
     );
 
     res.status(201).json({
@@ -89,6 +114,7 @@ app.post("/reports", async (req, res) => {
       message: "Report submitted successfully",
       report: result.rows[0],
     });
+
   } catch (error) {
     console.error("Report error:", error);
 
@@ -99,6 +125,7 @@ app.post("/reports", async (req, res) => {
   }
 });
 
+// Get all reports
 app.get("/reports", async (req, res) => {
   try {
     const result = await pool.query(
@@ -109,6 +136,7 @@ app.get("/reports", async (req, res) => {
       success: true,
       reports: result.rows,
     });
+
   } catch (error) {
     console.error("Get reports error:", error);
 
@@ -119,6 +147,9 @@ app.get("/reports", async (req, res) => {
   }
 });
 
+// Start server
 app.listen(PORT, () => {
-  console.log(`Chand App API running on port ${PORT}`);
+  console.log(
+    `Chand App API running on port ${PORT}`
+  );
 });
